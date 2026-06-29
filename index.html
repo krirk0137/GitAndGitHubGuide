@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>คู่มือ Git, GitHub &amp; GitHub Desktop — ฉบับเตรียมพร้อมก่อนเริ่มงานใหม่</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#10141b;
+    --ink-2:#161c26;
+    --ink-3:#1d2530;
+    --paper:#f6f7f9;
+    --paper-2:#ffffff;
+    --line:#e3e7ec;
+    --line-dark:#2a3340;
+    --text:#1a232f;
+    --text-dim:#586273;
+    --text-dark:#dde6f0;
+    --text-dark-dim:#8b97a8;
+    --lane-1:#22c79c;   /* main  (teal)   */
+    --lane-2:#f2a430;   /* feature (amber)*/
+    --lane-3:#ec6594;   /* hotfix (pink)  */
+    --lane-4:#8f7cf7;   /* develop(violet)*/
+    --add:#2ea043;
+    --add-soft:#e6f4ea;
+    --del:#e5484d;
+    --del-soft:#fbe9ea;
+    --shadow:0 1px 2px rgba(16,20,27,.04),0 8px 30px rgba(16,20,27,.06);
+    --shadow-lg:0 24px 70px rgba(16,20,27,.14);
+    --r:14px;
+    --maxw:1180px;
+    --rail:300px;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+  body{
+    margin:0;
+    font-family:"IBM Plex Sans Thai",system-ui,sans-serif;
+    color:var(--text);
+    background:var(--paper);
+    line-height:1.85;
+    font-weight:400;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  h1,h2,h3,h4{font-family:"Chakra Petch","IBM Plex Sans Thai",sans-serif;line-height:1.3;letter-spacing:.2px}
+  code,pre,kbd,.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+  a{color:inherit}
+  ::selection{background:var(--lane-1);color:#04140f}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    background:
+      radial-gradient(1100px 520px at 78% -10%,rgba(34,199,156,.18),transparent 60%),
+      radial-gradient(900px 460px at 8% 120%,rgba(143,124,247,.16),transparent 55%),
+      var(--ink);
+    color:var(--text-dark);
+    overflow:hidden;
+    border-bottom:1px solid var(--line-dark);
+  }
+  .hero::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(70% 60% at 50% 40%,#000,transparent);
+  }
+  .hero-inner{
+    max-width:var(--maxw);margin:0 auto;
+    padding:clamp(56px,8vw,96px) clamp(20px,5vw,40px) clamp(40px,6vw,72px);
+    position:relative;z-index:2;
+    display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;
+  }
+  @media (max-width:880px){.hero-inner{grid-template-columns:1fr;gap:36px}}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:9px;
+    font-family:"JetBrains Mono";font-size:12.5px;letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--lane-1);
+    background:rgba(34,199,156,.08);border:1px solid rgba(34,199,156,.28);
+    padding:7px 13px;border-radius:999px;margin-bottom:24px;font-weight:500;
+  }
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--lane-1);box-shadow:0 0 0 4px rgba(34,199,156,.18)}
+  .hero h1{
+    font-size:clamp(33px,5.4vw,56px);font-weight:700;margin:0 0 20px;
+    letter-spacing:0;line-height:1.18;
+  }
+  .hero h1 .hl{color:var(--lane-1)}
+  .hero h1 .hl2{color:var(--lane-2)}
+  .hero h1 .hl3{color:var(--lane-4)}
+  .hero p.lead{font-size:clamp(15.5px,1.7vw,18.5px);color:var(--text-dark-dim);max-width:46ch;margin:0 0 28px}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:30px}
+  .chip{
+    font-family:"JetBrains Mono";font-size:12.5px;font-weight:500;
+    padding:8px 14px;border-radius:9px;border:1px solid var(--line-dark);
+    background:rgba(255,255,255,.03);color:var(--text-dark);
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .chip i{width:9px;height:9px;border-radius:2px;display:inline-block}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:12px}
+  .btn{
+    font-family:"Chakra Petch";font-weight:600;font-size:15px;
+    padding:13px 22px;border-radius:11px;border:1px solid transparent;cursor:pointer;
+    text-decoration:none;display:inline-flex;align-items:center;gap:9px;transition:transform .15s ease,box-shadow .15s ease,background .15s ease;
+  }
+  .btn-primary{background:var(--lane-1);color:#04140f;box-shadow:0 8px 24px rgba(34,199,156,.3)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(34,199,156,.42)}
+  .btn-ghost{background:transparent;color:var(--text-dark);border-color:var(--line-dark)}
+  .btn-ghost:hover{background:rgba(255,255,255,.05);transform:translateY(-2px)}
+
+  /* commit-graph terminal panel */
+  .term{
+    background:linear-gradient(180deg,#0c1118,#0a0e14);
+    border:1px solid var(--line-dark);border-radius:16px;overflow:hidden;
+    box-shadow:var(--shadow-lg);
+  }
+  .term-bar{display:flex;align-items:center;gap:8px;padding:13px 16px;border-bottom:1px solid var(--line-dark);background:rgba(255,255,255,.02)}
+  .term-bar .b{width:11px;height:11px;border-radius:50%}
+  .term-bar .b1{background:#ff5f56}.term-bar .b2{background:#ffbd2e}.term-bar .b3{background:#27c93f}
+  .term-bar .ttl{margin-left:8px;font-family:"JetBrains Mono";font-size:12px;color:var(--text-dark-dim)}
+  .term-body{padding:18px 16px 22px}
+  .graphwrap{width:100%}
+  .term-cap{font-family:"JetBrains Mono";font-size:11.5px;color:var(--text-dark-dim);margin-top:14px;text-align:center;letter-spacing:.3px}
+
+  /* graph node + line animations */
+  @keyframes drawline{to{stroke-dashoffset:0}}
+  @keyframes popnode{0%{transform:scale(0);opacity:0}60%{transform:scale(1.25)}100%{transform:scale(1);opacity:1}}
+  .gline{stroke-dasharray:340;stroke-dashoffset:340;animation:drawline 1.1s ease forwards}
+  .gnode{transform-box:fill-box;transform-origin:center;opacity:0;animation:popnode .5s cubic-bezier(.2,1.4,.4,1) forwards}
+  @media (prefers-reduced-motion:reduce){
+    .gline{stroke-dashoffset:0;animation:none}
+    .gnode{opacity:1;animation:none}
+  }
+
+  /* ---------- LAYOUT ---------- */
+  .shell{max-width:var(--maxw);margin:0 auto;padding:0 clamp(20px,5vw,40px);display:grid;grid-template-columns:var(--rail) 1fr;gap:48px;align-items:start}
+  @media (max-width:1000px){.shell{grid-template-columns:1fr;gap:0}}
+
+  /* commit-graph nav rail */
+  .rail{position:sticky;top:0;align-self:start;padding-top:40px;height:100vh;overflow-y:auto}
+  .rail::-webkit-scrollbar{width:6px}.rail::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+  .rail-h{font-family:"JetBrains Mono";font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);margin:0 0 18px 6px}
+  .rail ol{list-style:none;margin:0;padding:0;position:relative}
+  .rail ol::before{content:"";position:absolute;left:13px;top:8px;bottom:8px;width:2px;background:var(--line)}
+  .rail li{position:relative;margin:0}
+  .rail a{
+    display:flex;align-items:center;gap:14px;padding:7px 8px 7px 0;text-decoration:none;
+    color:var(--text-dim);font-size:13.5px;font-weight:500;border-radius:8px;transition:color .15s ease;
+  }
+  .rail a .nd{
+    width:14px;height:14px;border-radius:50%;background:var(--paper);border:2.5px solid var(--line);
+    flex:0 0 auto;z-index:1;margin-left:6px;transition:all .2s ease;
+  }
+  .rail a:hover{color:var(--text)}
+  .rail a:hover .nd{border-color:var(--text-dim)}
+  .rail a.active{color:var(--text);font-weight:600}
+  .rail a.active .nd{border-color:var(--c,var(--lane-1));background:var(--c,var(--lane-1));box-shadow:0 0 0 4px color-mix(in srgb,var(--c,var(--lane-1)) 22%,transparent)}
+  .rail .num{font-family:"JetBrains Mono";font-size:11px;color:var(--text-dim);width:18px;text-align:right;opacity:.7}
+
+  main{padding:40px 0 80px;min-width:0}
+
+  /* ---------- SECTIONS ---------- */
+  .sec{scroll-margin-top:24px;margin-bottom:18px;padding-bottom:46px;border-bottom:1px solid var(--line)}
+  .sec:last-of-type{border-bottom:none}
+  .sec-head{display:flex;align-items:flex-start;gap:16px;margin-bottom:22px}
+  .sec-tag{
+    font-family:"JetBrains Mono";font-size:11px;font-weight:700;letter-spacing:.5px;
+    color:#fff;padding:5px 9px;border-radius:7px;flex:0 0 auto;margin-top:6px;
+  }
+  .sec h2{font-size:clamp(23px,3vw,30px);font-weight:700;margin:0 0 4px;letter-spacing:0}
+  .sec .sub{color:var(--text-dim);font-size:15px;margin:0}
+  .sec h3{font-size:19px;font-weight:600;margin:34px 0 12px;display:flex;align-items:center;gap:10px}
+  .sec h3 .ic{font-size:16px}
+  .sec h4{font-size:16px;font-weight:600;margin:22px 0 8px}
+  .sec p{margin:0 0 14px}
+  .sec ul,.sec ol{margin:0 0 16px;padding-left:22px}
+  .sec li{margin-bottom:7px}
+  .lead-p{font-size:16.5px;color:var(--text)}
+
+  /* generic pieces */
+  .kbd,kbd{font-family:"JetBrains Mono";font-size:12.5px;background:var(--ink-3);color:var(--text-dark);padding:2px 7px;border-radius:6px;border:1px solid var(--line-dark);white-space:nowrap}
+  .cmd{font-family:"JetBrains Mono";font-size:13px;background:#eef0f3;color:#0b2e24;padding:2px 7px;border-radius:6px;border:1px solid var(--line);white-space:nowrap;font-weight:500}
+  .b{font-weight:600}
+
+  /* code block */
+  .code{position:relative;background:var(--ink);border:1px solid var(--line-dark);border-radius:12px;margin:0 0 18px;overflow:hidden;box-shadow:var(--shadow)}
+  .code-top{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid var(--line-dark);background:rgba(255,255,255,.02)}
+  .code-top .lbl{font-family:"JetBrains Mono";font-size:11px;color:var(--text-dark-dim);letter-spacing:.5px}
+  .copy{
+    font-family:"JetBrains Mono";font-size:11px;color:var(--text-dark-dim);background:transparent;
+    border:1px solid var(--line-dark);border-radius:7px;padding:4px 10px;cursor:pointer;transition:all .15s ease;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .copy:hover{color:var(--lane-1);border-color:var(--lane-1)}
+  .copy.ok{color:var(--lane-1);border-color:var(--lane-1)}
+  .code pre{margin:0;padding:15px 16px;overflow-x:auto}
+  .code code{font-size:13px;color:var(--text-dark);line-height:1.75;display:block;white-space:pre}
+  .code .c{color:#6a7686}                 /* comment */
+  .code .g{color:var(--lane-1)}            /* git keyword */
+  .code .o{color:var(--lane-2)}            /* option/flag */
+  .code .s{color:#e6c07b}                  /* string */
+  .code .add{color:var(--add)}
+  .code .del{color:var(--del)}
+
+  /* cards / grid */
+  .grid{display:grid;gap:16px}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:680px){.g2,.g3{grid-template-columns:1fr}}
+  .card{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--shadow)}
+  .card h4{margin:0 0 6px;display:flex;align-items:center;gap:9px}
+  .card .ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:15px;flex:0 0 auto}
+  .card p{margin:0;font-size:14px;color:var(--text-dim);line-height:1.7}
+  .card .mono{font-size:12.5px}
+
+  /* callouts */
+  .note{border-radius:12px;padding:16px 18px;margin:0 0 18px;font-size:14.5px;border:1px solid;display:flex;gap:13px;align-items:flex-start}
+  .note .ni{font-size:18px;flex:0 0 auto;margin-top:1px}
+  .note p{margin:0}
+  .note b{font-weight:600}
+  .note.tip{background:#e9f8f2;border-color:#bce9d8;color:#0c3d2e}
+  .note.warn{background:#fff4e6;border-color:#ffd9a8;color:#7a4a05}
+  .note.danger{background:var(--del-soft);border-color:#f3b9bb;color:#8a1f23}
+  .note.info{background:#eef1ff;border-color:#cdd5ff;color:#2c3a82}
+
+  /* table */
+  .tbl{width:100%;border-collapse:collapse;margin:0 0 18px;font-size:14px;overflow:hidden;border-radius:12px;box-shadow:var(--shadow);background:var(--paper-2);display:block;overflow-x:auto}
+  .tbl table{width:100%;border-collapse:collapse;min-width:520px}
+  .tbl th,.tbl td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  .tbl th{background:var(--ink);color:var(--text-dark);font-family:"Chakra Petch";font-weight:600;font-size:13px;letter-spacing:.3px}
+  .tbl tr:last-child td{border-bottom:none}
+  .tbl td .cmd{font-size:12.5px}
+  .tbl tr:hover td{background:#fafbfc}
+
+  /* diagram: areas flow */
+  .flowbox{background:var(--ink);border:1px solid var(--line-dark);border-radius:16px;padding:28px 18px 22px;margin:0 0 18px;box-shadow:var(--shadow)}
+  .flow-legend{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:18px;font-family:"JetBrains Mono";font-size:11.5px;color:var(--text-dark-dim)}
+  .flow-legend span{display:inline-flex;align-items:center;gap:7px}
+  .flow-legend i{width:18px;height:3px;border-radius:2px;display:inline-block}
+
+  /* tabs (scenarios) */
+  .tabs{margin:0 0 18px}
+  .tabbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .tabbtn{
+    font-family:"Chakra Petch";font-weight:600;font-size:13.5px;
+    padding:9px 15px;border-radius:10px;border:1px solid var(--line);background:var(--paper-2);
+    color:var(--text-dim);cursor:pointer;transition:all .15s ease;
+  }
+  .tabbtn:hover{color:var(--text);border-color:var(--text-dim)}
+  .tabbtn.active{background:var(--ink);color:var(--text-dark);border-color:var(--ink)}
+  .tabpanel{display:none;animation:fade .35s ease}
+  .tabpanel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .scenario{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--shadow)}
+  .scenario .q{font-weight:600;font-size:15.5px;margin:0 0 6px;color:var(--text)}
+  .scenario .q::before{content:"❓ ";}
+
+  /* reveal on scroll */
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+  /* progress bar */
+  .progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--lane-1),var(--lane-2),var(--lane-4));width:0;z-index:50;transition:width .1s linear}
+
+  /* footer */
+  footer{background:var(--ink);color:var(--text-dark);border-top:1px solid var(--line-dark);margin-top:30px}
+  .foot-inner{max-width:var(--maxw);margin:0 auto;padding:46px clamp(20px,5vw,40px)}
+  .foot-inner h3{font-size:18px;margin:0 0 16px;color:var(--text-dark)}
+  .foot-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-bottom:30px}
+  .foot-links a{
+    text-decoration:none;background:rgba(255,255,255,.03);border:1px solid var(--line-dark);
+    border-radius:11px;padding:14px 16px;display:block;transition:all .15s ease;
+  }
+  .foot-links a:hover{border-color:var(--lane-1);transform:translateY(-2px)}
+  .foot-links .t{font-weight:600;font-family:"Chakra Petch";color:var(--text-dark);font-size:14.5px;margin-bottom:2px}
+  .foot-links .d{font-size:12.5px;color:var(--text-dark-dim);font-family:"JetBrains Mono"}
+  .foot-fine{font-size:12.5px;color:var(--text-dark-dim);border-top:1px solid var(--line-dark);padding-top:22px;line-height:1.8}
+
+  /* cheat grid */
+  .cheat{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+  .cheat .ch{background:var(--paper-2);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
+  .cheat .ch h4{margin:0 0 10px;font-size:14px;display:flex;align-items:center;gap:8px}
+  .cheat .ch .chip-c{width:9px;height:9px;border-radius:3px;display:inline-block}
+  .cheat .ch .row{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;padding:4px 0;border-bottom:1px dashed var(--line)}
+  .cheat .ch .row:last-child{border-bottom:none}
+  .cheat .ch .row .k{font-family:"JetBrains Mono";color:#0b2e24;font-weight:500}
+  .cheat .ch .row .v{color:var(--text-dim);text-align:right}
+
+  .anchor-skip{position:absolute;left:-9999px}
+  .anchor-skip:focus{left:16px;top:16px;z-index:99;background:var(--lane-1);color:#04140f;padding:10px 16px;border-radius:8px}
+</style>
+</head>
+<body>
+<a href="#main" class="anchor-skip">ข้ามไปเนื้อหา</a>
+<div class="progress" id="progress"></div>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <span class="eyebrow"><span class="dot"></span>คู่มือฉบับเตรียมพร้อมก่อนเริ่มงานใหม่</span>
+      <h1>เข้าใจ <span class="hl">Git</span>, <span class="hl2">GitHub</span><br>&amp; <span class="hl3">GitHub&nbsp;Desktop</span><br>แบบใช้งานได้จริงในที่ทำงาน</h1>
+      <p class="lead">รวมทุกอย่างที่ควรรู้ ตั้งแต่แนวคิดพื้นฐาน คำสั่งที่ใช้บ่อยจริงในทีม วิธีแก้ conflict ไปจนถึงคำสั่งฉุกเฉินตอน "commit ผิด" — อ่านจบแล้วเริ่มงานวันแรกได้อย่างมั่นใจ</p>
+      <div class="chips">
+        <span class="chip"><i style="background:var(--lane-1)"></i>Git = ตัวจัดการเวอร์ชัน</span>
+        <span class="chip"><i style="background:var(--lane-2)"></i>GitHub = ที่เก็บออนไลน์</span>
+        <span class="chip"><i style="background:var(--lane-4)"></i>Desktop = หน้าจอ GUI</span>
+      </div>
+      <div class="hero-cta">
+        <a href="#concept" class="btn btn-primary">เริ่มจากแนวคิดหลัก →</a>
+        <a href="#cheat" class="btn btn-ghost">ไปที่ Cheat Sheet</a>
+      </div>
+    </div>
+
+    <!-- animated commit graph -->
+    <div class="graphwrap">
+      <div class="term">
+        <div class="term-bar">
+          <span class="b b1"></span><span class="b b2"></span><span class="b b3"></span>
+          <span class="ttl">git log --oneline --graph --all</span>
+        </div>
+        <div class="term-body">
+          <svg viewBox="0 0 480 210" width="100%" role="img" aria-label="แผนภาพ commit graph แสดงการแตก branch และ merge กลับ">
+            <!-- main lane -->
+            <path class="gline" d="M40 160 H440" fill="none" stroke="var(--lane-1)" stroke-width="3" style="animation-delay:.1s"/>
+            <!-- feature lane: diverge then merge -->
+            <path class="gline" d="M120 160 C150 160 150 95 185 95 H300 C335 95 335 160 360 160" fill="none" stroke="var(--lane-2)" stroke-width="3" style="stroke-dasharray:360;stroke-dashoffset:360;animation-delay:.7s"/>
+            <!-- hotfix small branch -->
+            <path class="gline" d="M280 160 C300 160 300 30 330 30 H372 C400 30 400 160 410 160" fill="none" stroke="var(--lane-3)" stroke-width="3" style="stroke-dasharray:360;stroke-dashoffset:360;animation-delay:1.5s"/>
+
+            <!-- nodes main -->
+            <circle class="gnode" cx="40"  cy="160" r="9" fill="var(--lane-1)" style="animation-delay:.2s"/>
+            <circle class="gnode" cx="120" cy="160" r="9" fill="var(--lane-1)" style="animation-delay:.5s"/>
+            <circle class="gnode" cx="360" cy="160" r="11" fill="var(--lane-1)" stroke="#0a0e14" stroke-width="2" style="animation-delay:1.9s"/>
+            <circle class="gnode" cx="440" cy="160" r="9" fill="var(--lane-1)" style="animation-delay:2.3s"/>
+            <!-- nodes feature -->
+            <circle class="gnode" cx="200" cy="95" r="8" fill="var(--lane-2)" style="animation-delay:1.0s"/>
+            <circle class="gnode" cx="280" cy="95" r="8" fill="var(--lane-2)" style="animation-delay:1.3s"/>
+            <!-- nodes hotfix -->
+            <circle class="gnode" cx="345" cy="30" r="8" fill="var(--lane-3)" style="animation-delay:1.8s"/>
+
+            <!-- labels -->
+            <text x="40"  y="190" fill="var(--lane-1)" font-family="JetBrains Mono" font-size="11" text-anchor="middle">init</text>
+            <text x="200" y="78"  fill="var(--lane-2)" font-family="JetBrains Mono" font-size="11" text-anchor="middle">feature</text>
+            <text x="345" y="18"  fill="var(--lane-3)" font-family="JetBrains Mono" font-size="11" text-anchor="middle">hotfix</text>
+            <text x="360" y="190" fill="var(--lane-1)" font-family="JetBrains Mono" font-size="11" text-anchor="middle">merge</text>
+          </svg>
+          <div class="term-cap">main · feature · hotfix — แตกออกไปทำงาน แล้ว merge กลับมารวมกัน</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== SHELL ===================== -->
+<div class="shell">
+  <!-- NAV RAIL -->
+  <nav class="rail" aria-label="สารบัญ">
+    <p class="rail-h">// commit history</p>
+    <ol>
+      <li><a href="#concept"  style="--c:var(--lane-1)"><span class="nd"></span><span class="num">01</span><span>Git / GitHub / Desktop คืออะไร</span></a></li>
+      <li><a href="#model"    style="--c:var(--lane-2)"><span class="nd"></span><span class="num">02</span><span>โมเดลหลัก: 3 พื้นที่ของ Git</span></a></li>
+      <li><a href="#setup"    style="--c:var(--lane-4)"><span class="nd"></span><span class="num">03</span><span>ติดตั้ง &amp; ตั้งค่าครั้งแรก</span></a></li>
+      <li><a href="#daily"    style="--c:var(--lane-3)"><span class="nd"></span><span class="num">04</span><span>Workflow ประจำวัน</span></a></li>
+      <li><a href="#branch"   style="--c:var(--lane-1)"><span class="nd"></span><span class="num">05</span><span>Branch &amp; Merge</span></a></li>
+      <li><a href="#team"     style="--c:var(--lane-2)"><span class="nd"></span><span class="num">06</span><span>ทำงานเป็นทีม &amp; Pull Request</span></a></li>
+      <li><a href="#conflict" style="--c:var(--lane-3)"><span class="nd"></span><span class="num">07</span><span>แก้ Merge Conflict</span></a></li>
+      <li><a href="#power"    style="--c:var(--lane-4)"><span class="nd"></span><span class="num">08</span><span>คำสั่งระดับโปรในที่ทำงาน</span></a></li>
+      <li><a href="#ohno"     style="--c:var(--del)"><span class="nd"></span><span class="num">09</span><span>"แย่แล้ว!" — กู้คืน &amp; แก้พลาด</span></a></li>
+      <li><a href="#convention" style="--c:var(--lane-1)"><span class="nd"></span><span class="num">10</span><span>มาตรฐาน commit &amp; branch</span></a></li>
+      <li><a href="#desktop"  style="--c:var(--lane-2)"><span class="nd"></span><span class="num">11</span><span>GitHub Desktop ฉบับเต็ม</span></a></li>
+      <li><a href="#interview" style="--c:var(--lane-4)"><span class="nd"></span><span class="num">12</span><span>เตรียมตัวสัมภาษณ์ &amp; วันแรก</span></a></li>
+      <li><a href="#cheat"    style="--c:var(--lane-3)"><span class="nd"></span><span class="num">13</span><span>Cheat Sheet สรุปคำสั่ง</span></a></li>
+    </ol>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="main">
+
+  <!-- 01 CONCEPT -->
+  <section class="sec reveal" id="concept">
+    <div class="sec-head">
+      <span class="sec-tag" style="background:var(--lane-1)">01</span>
+      <div><h2>Git, GitHub และ GitHub Desktop ต่างกันยังไง</h2>
+      <p class="sub">เคลียร์ความสับสนที่หลายคนเข้าใจผิดตั้งแต่จุดเริ่มต้น</p></div>
+    </div>
+    <p class="lead-p">สามคำนี้คนละสิ่งกัน แต่ทำงานร่วมกัน วิธีจำง่ายที่สุด: <span class="b">Git</span> คือ "เครื่องมือ", <span class="b">GitHub</span> คือ "บ้านบนคลาวด์", <span class="b">GitHub Desktop</span> คือ "รีโมตคอนโทรล"</p>
+
+    <div class="grid g3">
+      <div class="card">
+        <h4><span class="ic" style="background:rgba(34,199,156,.12);color:var(--lane-1)">⚙️</span>Git</h4>
+        <p>โปรแกรม <span class="b">Version Control</span> ที่ติดตั้งในเครื่องเรา ทำหน้าที่บันทึกประวัติการเปลี่ยนแปลงโค้ดทุกเวอร์ชัน ทำงานผ่าน <span class="b">คำสั่ง (command line)</span> ใช้งานได้แม้ไม่มีอินเทอร์เน็ต — Git คือพระเอกตัวจริง</p>
+      </div>
+      <div class="card">
+        <h4><span class="ic" style="background:rgba(242,164,48,.14);color:var(--lane-2)">☁️</span>GitHub</h4>
+        <p><span class="b">บริการเว็บ</span>สำหรับเก็บโปรเจกต์ Git ไว้บนคลาวด์ เพื่อให้ทีมแชร์โค้ดกันได้ มีระบบ Pull Request, Issues, Code Review, CI/CD — คู่แข่งคล้ายกันคือ GitLab, Bitbucket, Azure DevOps</p>
+      </div>
+      <div class="card">
+        <h4><span class="ic" style="background:rgba(143,124,247,.14);color:var(--lane-4)">🖱️</span>GitHub Desktop</h4>
+        <p>โปรแกรม <span class="b">หน้าจอกราฟิก (GUI)</span> ที่ครอบ Git ไว้ ให้เรากดปุ่มแทนพิมพ์คำสั่ง เหมาะกับคนเริ่มต้น เห็น diff ชัด ลดโอกาสพิมพ์คำสั่งผิด — แต่เบื้องหลังก็ยังเรียก Git ตัวเดิม</p>
+      </div>
+    </div>
+
+    <div class="note info"><span class="ni">💡</span><p><b>เปรียบเทียบให้เห็นภาพ:</b> Git เหมือน "เครื่องยนต์รถ", GitHub เหมือน "อู่/ลานจอดรถส่วนกลางที่ทีมเอารถมาจอดรวมกัน", ส่วน GitHub Desktop คือ "พวงมาลัยกับแผงควบคุม" ที่ทำให้ขับง่ายขึ้น คุณไม่จำเป็นต้องถอดเครื่องยนต์เป็นถึงจะขับรถได้ แต่รู้ไว้บ้างก็ดีตอนรถมีปัญหา</p></div>
+
+    <h3><span class="ic">🎯</span>ในที่ทำงานจริง คุณจะเจออะไร</h3>
+    <ul>
+      <li>โค้ดของบริษัทถูกเก็บไว้บน GitHub (หรือ GitLab/Azure DevOps/Bitbucket — แนวคิดเหมือนกันหมด)</li>
+      <li>คุณ <span class="cmd">clone</span> โปรเจกต์ลงเครื่อง → แก้โค้ดบน branch ของตัวเอง → <span class="cmd">push</span> ขึ้นไป → เปิด <span class="b">Pull Request</span> ให้เพื่อนรีวิว → merge เข้า branch หลัก</li>
+      <li>จะใช้ผ่าน command line หรือ GitHub Desktop ก็ได้ หลายคนใช้ทั้งสองอย่างผสมกัน (GUI สำหรับงานทั่วไป, command line ตอนต้องทำอะไรซับซ้อน)</li>
+    </ul>
+  </section>
+
+  <!-- 02 MODEL -->
+  <section class="sec reveal" id="model">
+    <div class="sec-head">
+      <span class="sec-tag" style="background:var(--lane-2)">02</span>
+      <div><h2>โมเดลหลัก: 3 พื้นที่ของ Git</h2>
+      <p class="sub">ถ้าเข้าใจภาพนี้ภาพเดียว คำสั่ง Git ที่เหลือจะเข้าใจตามมาทั้งหมด</p></div>
+    </div>
+    <p class="lead-p">หัวใจของ Git คือไฟล์เดินทางผ่าน <span class="b">4 พื้นที่</span> ไฟล์จะค่อยๆ ขยับจากซ้ายไปขวาด้วยคำสั่งต่างๆ ลองดูแอนิเมชันด้านล่าง (จุดสว่างคือไฟล์ที่กำลังเดินทาง)</p>
+
+    <div class="flowbox">
+      <svg viewBox="0 0 760 280" width="100%" role="img" aria-label="แผนภาพการไหลของไฟล์ผ่าน Working Directory, Staging, Local Repository และ Remote">
+        <defs>
+          <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0 0 L9 4.5 L0 9 z" fill="#8b97a8"/>
+          </marker>
+          <marker id="arrb" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0 0 L9 4.5 L0 9 z" fill="#586273"/>
+          </marker>
+        </defs>
+
+        <!-- boxes -->
+        <g font-family="Chakra Petch" font-weight="600">
+          <rect x="18"  y="80" width="150" height="86" rx="12" fill="#1d2530" stroke="var(--lane-3)" stroke-width="1.5"/>
+          <text x="93"  y="112" fill="#dde6f0" font-size="13" text-anchor="middle">Working</text>
+          <text x="93"  y="130" fill="#dde6f0" font-size="13" text-anchor="middle">Directory</text>
+          <text x="93"  y="152" fill="#8b97a8" font-size="10" text-anchor="middle" font-family="JetBrains Mono">โฟลเดอร์ที่แก้ไฟล์</text>
+
+          <rect x="208" y="80" width="150" height="86" rx="12" fill="#1d2530" stroke="var(--lane-2)" stroke-width="1.5"/>
+          <text x="283" y="112" fill="#dde6f0" font-size="13" text-anchor="middle">Staging</text>
+          <text x="283" y="130" fill="#dde6f0" font-size="13" text-anchor="middle">Area</text>
+          <text x="283" y="152" fill="#8b97a8" font-size="10" text-anchor="middle" font-family="JetBrains Mono">เตรียมจะ commit</text>
+
+          <rect x="398" y="80" width="150" height="86" rx="12" fill="#1d2530" stroke="var(--lane-1)" stroke-width="1.5"/>
+          <text x="473" y="112" fill="#dde6f0" font-size="13" text-anchor="middle">Local</text>
+          <text x="473" y="130" fill="#dde6f0" font-size="13" text-anchor="middle">Repository</text>
+          <text x="473" y="152" fill="#8b97a8" font-size="10" text-anchor="middle" font-family="JetBrains Mono">.git ในเครื่อง</text>
+
+          <rect x="592" y="80" width="150" height="86" rx="12" fill="#1d2530" stroke="var(--lane-4)" stroke-width="1.5"/>
+          <text x="667" y="112" fill="#dde6f0" font-size="13" text-anchor="middle">Remote</text>
+          <text x="667" y="130" fill="#dde6f0" font-size="13" text-anchor="middle">(GitHub)</text>
+          <text x="667" y="152" fill="#8b97a8" font-size="10" text-anchor="middle" font-family="JetBrains Mono">บนคลาวด์</text>
+        </g>
+
+        <!-- forward arrows + labels -->
+        <g font-family="JetBrains Mono" font-size="11">
+          <line x1="168" y1="108" x2="206" y2="108" stroke="#8b97a8" stroke-width="2" marker-end="url(#arr)"/>
+          <text x="187" y="98" fill="var(--lane-2)" text-anchor="middle">add</text>
+          <line x1="358" y1="108" x2="396" y2="108" stroke="#8b97a8" stroke-width="2" marker-end="url(#arr)"/>
+          <text x="377" y="98" fill="var(--lane-1)" text-anchor="middle">commit</text>
+          <line x1="548" y1="108" x2="590" y2="108" stroke="#8b97a8" stroke-width="2" marker-end="url(#arr)"/>
+          <text x="569" y="98" fill="var(--lane-4)" text-anchor="middle">push</text>
+        </g>
+        <!-- backward arrows -->
+        <g font-family="JetBrains Mono" font-size="11">
+          <path d="M592 142 H170" fill="none" stroke="#586273" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrb)"/>
+          <text x="380" y="138" fill="#8b97a8" text-anchor="middle">← pull / fetch (ดึงของใหม่ลงมา)</text>
+        </g>
+
+        <!-- traveling file dot -->
+        <circle r="7" fill="var(--lane-1)" opacity="0">
+          <animate attributeName="opacity" values="0;1;1;1;1;1;0" dur="6s" repeatCount="indefinite"/>
+          <animateMotion dur="6s" repeatCount="indefinite" keyPoints="0;0.16;0.33;0.5;0.66;0.83;1" keyTimes="0;0.15;0.33;0.5;0.66;0.83;1" calcMode="linear"
+            path="M93 200 L93 130 L283 130 L473 130 L667 130 L667 200 L93 200"/>
+        </circle>
+      </svg>
+      <div class="flow-legend">
+        <span><i style="background:var(--lane-2)"></i>git add</span>
+        <span><i style="background:var(--lane-1)"></i>git commit</span>
+        <span><i style="background:var(--lane-4)"></i>git push</span>
+        <span><i style="background:#586273"></i>git pull / fetch</span>
+      </div>
+    </div>
+
+    <div class="tbl"><table>
+      <tr><th>พื้นที่</th><th>คืออะไร</th><th>คำสั่งที่เกี่ยวข้อง</th></tr>
+      <tr><td><b>Working Directory</b></td><td>โฟลเดอร์โปรเจกต์จริงที่เราเปิดแก้ไฟล์อยู่ตอนนี้</td><td><span class="cmd">git status</span> ดูว่าไฟล์ไหนเปลี่ยน</td></tr>
+      <tr><td><b>Staging Area</b><br>(Index)</td><td>"ตะกร้า" ที่เลือกว่าจะเอาไฟล์ไหนเข้า commit รอบนี้บ้าง</td><td><span class="cmd">git add</span> หยิบไฟล์เข้าตะกร้า</td></tr>
+      <tr><td><b>Local Repository</b></td><td>ประวัติ commit ทั้งหมดที่บันทึกไว้ในเครื่อง (โฟลเดอร์ <span class="cmd">.git</span>)</td><td><span class="cmd">git commit</span> บันทึกถาวร</td></tr>
+      <tr><td><b>Remote</b></td><td>สำเนาบนเซิร์ฟเวอร์ เช่น GitHub ที่ทุกคนในทีมเข้าถึงได้</td><td><span class="cmd">git push</span> / <span class="cmd">git pull</span></td></tr>
+    </table></div>
+
+    <div class="note tip"><span class="ni">✅</span><p><b>จำประโยคนี้ไว้:</b> "แก้ไฟล์ → <span class="cmd">add</span> เข้าตะกร้า → <span class="cmd">commit</span> เซฟลงประวัติ → <span class="cmd">push</span> ส่งขึ้นคลาวด์" วนแบบนี้ทุกวันคือ 90% ของงาน Git ในชีวิตประจำวัน</p></div>
+  </section>
+
+  <!-- 03 SETUP -->
+  <section class="sec reveal" id="setup">
+    <div class="sec-head">
+      <span class="sec-tag" style="background:var(--lane-4)">03</span>
+      <div><h2>ติดตั้งและตั้งค่าครั้งแรก</h2>
+      <p class="sub">ทำครั้งเดียวต่อเครื่องใหม่ — วันแรกที่ได้โน้ตบุ๊กบริษัทมาก็ทำตามนี้ได้เลย</p></div>
+    </div>
+
+    <h3><span class="ic">📥</span>1. ติดตั้งและเช็กเวอร์ชัน</h3>
+    <p>ดาวน์โหลด Git จาก <span class="cmd">git-scm.com</span> (Windows/Mac/Linux) จากนั้นตรวจสอบว่าติดตั้งสำเร็จ:</p>
+    <div class="code"><div class="code-top"><span class="lbl">terminal</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="g">git</span> --version
+<span class="c"># ตัวอย่างผลลัพธ์: git version 2.45.x</span></code></pre></div>
+
+    <h3><span class="ic">🪪</span>2. ตั้งชื่อและอีเมล (สำคัญมาก)</h3>
+    <p>ทุก commit จะถูกเซ็นชื่อด้วยข้อมูลนี้ ใช้อีเมลเดียวกับที่สมัคร GitHub/บัญชีบริษัท เพื่อให้ commit ผูกกับโปรไฟล์ถูกต้อง:</p>
+    <div class="code"><div class="code-top"><span class="lbl">ตั้งค่าระดับ global (ทั้งเครื่อง)</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="g">git</span> config --global user.name <span class="s">"Krirk Dev"</span>
+<span class="g">git</span> config --global user.email <span class="s">"you@company.com"</span>
+
+<span class="c"># ตั้งให้ branch แรกชื่อ main เสมอ (มาตรฐานปัจจุบัน)</span>
+<span class="g">git</span> config --global init.defaultBranch main
+
+<span class="c"># ให้ VS Code เป็น editor เวลา git ต้องการให้พิมพ์ข้อความ</span>
+<span class="g">git</span> config --global core.editor <span class="s">"code --wait"</span></code></pre></div>
+    <div class="note warn"><span class="ni">⚠️</span><p><b>เครื่องบริษัทบางที่</b>อาจต้องใช้อีเมลคนละตัวกับงานส่วนตัว ถ้าทำหลายโปรเจกต์ ตั้งค่าเฉพาะโปรเจกต์ได้โดยตัด <span class="cmd">--global</span> ออก (รันในโฟลเดอร์นั้น) เพื่อ override เฉพาะที่</p></div>
+
+    <h3><span class="ic">🔑</span>3. ตั้งค่าการยืนยันตัวตน (Authentication)</h3>
+    <p>ตอน push/pull กับ GitHub ต้องพิสูจน์ว่าเป็นเรา มี 2 วิธีหลัก เลือกอย่างใดอย่างหนึ่ง:</p>
+    <div class="grid g2">
+      <div class="card">
+        <h4><span class="ic" style="background:rgba(34,199,156,.12);color:var(--lane-1)">🔐</span>SSH Key (แนะนำสำหรับ command line)</h4>
+        <p>สร้างกุญแจครั้งเดียว แล้วไม่ต้องกรอกรหัสอีก เหมาะกับคนใช้ terminal บ่อย</p>
+      </div>
+      <div class="card">
+        <h4><span class="ic" style="background:rgba(242,164,48,.14);color:var(--lane-2)">🎟️</span>HTTPS + Token</h4>
+        <p>ใช้ URL แบบ https แล้วยืนยันด้วย <span class="b">Personal Access Token (PAT)</span> แทนรหัสผ่าน (GitHub เลิกรับรหัสผ่านธรรมดาแล้ว) — GitHub Desktop จัดการให้อัตโนมัติ</p>
+      </div>
+    </div>
+    <div class="code"><div class="code-top"><span class="lbl">สร้าง SSH key</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="c"># 1) สร้างกุญแจ (กด Enter ผ่านได้หมด)</span>
+ssh-keygen -t ed25519 -C <span class="s">"you@company.com"</span>
+
+<span class="c"># 2) ก๊อปปี้ public key ไปวางใน GitHub → Settings → SSH keys</span>
+<span class="c"># Windows (Git Bash):</span>
+cat ~/.ssh/id_ed25519.pub
+
+<span class="c"># 3) ทดสอบการเชื่อมต่อ</span>
+ssh -T git@github.com</code></pre></div>
+    <div class="note info"><span class="ni">💡</span><p>ถ้าใช้ <b>GitHub Desktop</b> เรื่อง auth นี้ไม่ต้องคิดมาก — แค่ Sign in ด้วยบัญชี GitHub ในแอป มันจัดการ token ให้เองทั้งหมด นี่คือข้อดีใหญ่ของ GUI</p></div>
+
+    <h3><span class="ic">🚫</span>4. ตั้ง <span class="cmd">.gitignore</span> (อย่าลืมเด็ดขาด)</h3>
+    <p>ไฟล์ <span class="cmd">.gitignore</span> บอก Git ว่าไฟล์ไหน "ไม่ต้องเก็บ" เช่น ไฟล์ build, secret, โฟลเดอร์ขยะ — สำหรับโปรเจกต์ .NET ตัวอย่างมาตรฐาน:</p>
+    <div class="code"><div class="code-top"><span class="lbl">.gitignore (ตัวอย่าง .NET / Visual Studio)</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="c"># build outputs</span>
+bin/
+obj/
+<span class="c"># Visual Studio</span>
+.vs/
+*.user
+*.suo
+<span class="c"># ความลับ — ห้าม commit เด็ดขาด!</span>
+appsettings.Development.json
+*.env
+secrets.json
+<span class="c"># IDE / OS อื่นๆ</span>
+.idea/
+.DS_Store</code></pre></div>
+    <div class="note danger"><span class="ni">🛑</span><p><b>กฎเหล็ก:</b> อย่า commit รหัสผ่าน, API key, connection string จริง ขึ้น Git เด็ดขาด แม้จะลบทีหลังมันก็ยังอยู่ในประวัติ คนเข้าถึง repo ได้จะเห็นหมด — นี่คือความผิดพลาดที่ทำให้คนโดนไล่ออกมาแล้ว ใช้ User Secrets / Environment Variables / Key Vault แทน</p></div>
+  </section>
+
+  <!-- 04 DAILY -->
+  <section class="sec reveal" id="daily">
+    <div class="sec-head">
+      <span class="sec-tag" style="background:var(--lane-3)">04</span>
+      <div><h2>Workflow ประจำวัน</h2>
+      <p class="sub">วงจรคำสั่งที่คุณจะพิมพ์ซ้ำๆ ทุกวันจนติดมือ</p></div>
+    </div>
+
+    <h3><span class="ic">📂</span>เริ่มต้นกับโปรเจกต์</h3>
+    <div class="code"><div class="code-top"><span class="lbl">terminal</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="c"># ดึงโปรเจกต์ที่มีอยู่แล้วจาก GitHub ลงเครื่อง (กรณีที่พบบ่อยสุดในที่ทำงาน)</span>
+<span class="g">git</span> clone git@github.com:company/project.git
+
+<span class="c"># หรือเริ่มโปรเจกต์ใหม่จากศูนย์</span>
+<span class="g">git</span> init</code></pre></div>
+
+    <h3><span class="ic">🔄</span>วงจรหลัก: status → add → commit → push</h3>
+    <div class="code"><div class="code-top"><span class="lbl">terminal</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="c"># 1) ดูว่ามีไฟล์อะไรเปลี่ยนบ้าง (ใช้บ่อยที่สุด — พิมพ์บ่อยๆ ได้เลย)</span>
+<span class="g">git</span> status
+
+<span class="c"># 2) หยิบไฟล์เข้า staging</span>
+<span class="g">git</span> add index.html          <span class="c"># เฉพาะไฟล์เดียว</span>
+<span class="g">git</span> add .                   <span class="c"># ทุกไฟล์ที่เปลี่ยน</span>
+<span class="g">git</span> add -p                  <span class="c"># เลือกทีละส่วน (interactive)</span>
+
+<span class="c"># 3) บันทึก commit พร้อมข้อความอธิบาย</span>
+<span class="g">git</span> commit -m <span class="s">"feat: add login validation"</span>
+
+<span class="c"># 4) ส่งขึ้น remote</span>
+<span class="g">git</span> push</code></pre></div>
+
+    <h3><span class="ic">⬇️</span>ดึงงานใหม่ของทีมลงมา</h3>
+    <div class="code"><div class="code-top"><span class="lbl">terminal</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="c"># pull = fetch (ดึงข้อมูล) + merge (รวมเข้า) ในคำสั่งเดียว</span>
+<span class="g">git</span> pull
+
+<span class="c"># fetch อย่างเดียว = ดึงมาดูก่อน ยังไม่รวม (ปลอดภัยกว่า)</span>
+<span class="g">git</span> fetch
+<span class="g">git</span> log origin/main --oneline   <span class="c"># ดูว่ามีอะไรใหม่ก่อนตัดสินใจ merge</span></code></pre></div>
+    <div class="note tip"><span class="ni">✅</span><p><b>นิสัยที่ดี:</b> <span class="b">pull ก่อน push เสมอ</span> ตอนเริ่มงานแต่ละวัน ดึงงานล่าสุดของทีมลงมาก่อน จะได้ไม่ชนกับงานคนอื่นและลด conflict</p></div>
+
+    <h3><span class="ic">🔍</span>ดูประวัติและความเปลี่ยนแปลง</h3>
+    <div class="code"><div class="code-top"><span class="lbl">terminal</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="g">git</span> log --oneline --graph --all   <span class="c"># ดูประวัติแบบกราฟสวยๆ</span>
+<span class="g">git</span> diff                          <span class="c"># ดูสิ่งที่แก้แต่ยังไม่ add</span>
+<span class="g">git</span> diff --staged                 <span class="c"># ดูสิ่งที่ add แล้วรอ commit</span>
+<span class="g">git</span> show &lt;commit-hash&gt;            <span class="c"># ดูรายละเอียด commit หนึ่งๆ</span></code></pre></div>
+  </section>
+
+  <!-- 05 BRANCH -->
+  <section class="sec reveal" id="branch">
+    <div class="sec-head">
+      <span class="sec-tag" style="background:var(--lane-1)">05</span>
+      <div><h2>Branch &amp; Merge — หัวใจของการทำงานเป็นทีม</h2>
+      <p class="sub">แตกสายงานออกไปทำของตัวเอง โดยไม่กระทบงานหลัก แล้วค่อยรวมกลับ</p></div>
+    </div>
+    <p class="lead-p"><span class="b">Branch</span> คือ "เส้นเวลาคู่ขนาน" คุณก๊อปสภาพโค้ดปัจจุบันออกมาเป็นสายของตัวเอง ทดลองแก้ได้เต็มที่ ถ้าพังก็ไม่กระทบ <span class="cmd">main</span> เมื่อเสร็จและผ่านรีวิวแล้วจึง <span class="b">merge</span> รวมกลับเข้า main</p>
+
+    <div class="flowbox">
+      <svg viewBox="0 0 720 220" width="100%" role="img" aria-label="แผนภาพการสร้าง branch ใหม่ ทำ commit แล้ว merge กลับเข้า main">
+        <!-- main line -->
+        <line x1="40" y1="160" x2="680" y2="160" stroke="var(--lane-1)" stroke-width="3"/>
+        <!-- feature branch up and back -->
+        <path d="M180 160 C215 160 215 80 250 80 H470 C505 80 505 160 540 160" fill="none" stroke="var(--lane-2)" stroke-width="3"/>
+        <!-- nodes main -->
+        <g>
+          <circle cx="100" cy="160" r="9" fill="var(--lane-1)"/>
+          <circle cx="180" cy="160" r="9" fill="var(--lane-1)"/>
+          <circle cx="540" cy="160" r="12" fill="var(--lane-1)" stroke="#0a0e14" stroke-width="2"/>
+          <circle cx="640" cy="160" r="9" fill="var(--lane-1)"/>
+        </g>
+        <!-- nodes feature -->
+        <g>
+          <circle cx="290" cy="80" r="8" fill="var(--lane-2)"/>
+          <circle cx="390" cy="80" r="8" fill="var(--lane-2)"/>
+          <circle cx="470" cy="80" r="8" fill="var(--lane-2)"/>
+        </g>
+        <g font-family="JetBrains Mono" font-size="12">
+          <text x="100" y="190" fill="var(--lane-1)" text-anchor="middle">main</text>
+          <text x="180" y="190" fill="#8b97a8" text-anchor="middle">switch -c</text>
+          <text x="380" y="62"  fill="var(--lane-2)" text-anchor="middle">feature/login (commit ของเรา)</text>
+          <text x="540" y="190" fill="var(--lane-1)" text-anchor="middle">merge</text>
+        </g>
+      </svg>
+      <div class="flow-legend">
+        <span><i style="background:var(--lane-1)"></i>main (branch หลัก)</span>
+        <span><i style="background:var(--lane-2)"></i>feature branch (ของเรา)</span>
+      </div>
+    </div>
+
+    <div class="code"><div class="code-top"><span class="lbl">การทำงานกับ branch</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="c"># ดู branch ทั้งหมด (ดอกจันคือ branch ที่อยู่ตอนนี้)</span>
+<span class="g">git</span> branch
+
+<span class="c"># สร้าง branch ใหม่ + ย้ายไปอยู่เลย (switch คือคำสั่งใหม่ที่ชัดกว่า checkout)</span>
+<span class="g">git</span> switch -c feature/login
+<span class="c"># เทียบเท่าคำสั่งเก่า: git checkout -b feature/login</span>
+
+<span class="c"># ทำงาน... add... commit... แล้ว push branch ขึ้น remote ครั้งแรก</span>
+<span class="g">git</span> push -u origin feature/login
+
+<span class="c"># สลับกลับไป main</span>
+<span class="g">git</span> switch main
+
+<span class="c"># รวม feature เข้า main (ยืนอยู่บน main แล้วสั่ง merge)</span>
+<span class="g">git</span> merge feature/login
+
+<span class="c"># ลบ branch ที่ merge เสร็จแล้ว (เก็บกวาด)</span>
+<span class="g">git</span> branch -d feature/login
+<span class="g">git</span> push origin --delete feature/login   <span class="c"># ลบบน remote ด้วย</span></code></pre></div>
+
+    <div class="note info"><span class="ni">💡</span><p><b>switch vs checkout:</b> <span class="cmd">git checkout</span> ตัวเก่าทำได้หลายอย่างจนสับสน (เปลี่ยน branch ก็ได้ กู้ไฟล์ก็ได้) Git รุ่นใหม่จึงแยกเป็น <span class="cmd">git switch</span> (สลับ branch) กับ <span class="cmd">git restore</span> (กู้ไฟล์) ให้ชัดขึ้น ใช้ตัวใหม่จะอ่านง่ายกว่า แต่เจอ checkout ในที่ทำงานก็ไม่ต้องตกใจ มันยังใช้ได้</p></div>
+  </section>
+
+  <!-- 06 TEAM -->
+  <section class="sec reveal" id="team">
+    <div class="sec-head">
+      <span class="sec-tag" style="background:var(--lane-2)">06</span>
+      <div><h2>ทำงานเป็นทีม &amp; Pull Request</h2>
+      <p class="sub">นี่คือสิ่งที่คุณจะทำจริงทุกวันในบริษัท — วงจรชีวิตของ PR</p></div>
+    </div>
+    <p class="lead-p"><span class="b">Pull Request (PR)</span> คือ "คำขออนุญาตรวมโค้ด" คุณบอกทีมว่า "ฉันทำฟีเจอร์นี้เสร็จแล้วบน branch ของฉัน ขอรวมเข้า main นะ ช่วยรีวิวหน่อย" PR คือจุดที่เกิด <span class="b">Code Review</span> และตรวจ CI/CD</p>
+
+    <h3><span class="ic">🔁</span>วงจรชีวิตของ Pull Request</h3>
+    <div class="flowbox" style="background:var(--paper-2);border-color:var(--line)">
+      <svg viewBox="0 0 740 130" width="100%" role="img" aria-label="ขั้นตอนของ Pull Request 5 ขั้น">
+        <defs><marker id="arr2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#586273"/></marker></defs>
+        <g font-family="Chakra Petch" font-weight="600" font-size="12.5">
+          <g><circle cx="70" cy="50" r="26" fill="rgba(34,199,156,.12)" stroke="var(--lane-1)" stroke-width="2"/><text x="70" y="55" text-anchor="middle" fill="#0c3d2e">①</text><text x="70" y="100" text-anchor="middle" fill="#1a232f" font-size="11">สร้าง branch</text></g>
+          <g><circle cx="225" cy="50" r="26" fill="rgba(242,164,48,.14)" stroke="var(--lane-2)" stroke-width="2"/><text x="225" y="55" text-anchor="middle" fill="#7a4a05">②</text><text x="225" y="100" text-anchor="middle" fill="#1a232f" font-size="11">commit + push</text></g>
+          <g><circle cx="380" cy="50" r="26" fill="rgba(143,124,247,.14)" stroke="var(--lane-4)" stroke-width="2"/><text x="380" y="55" text-anchor="middle" fill="#2c3a82">③</text><text x="380" y="100" text-anchor="middle" fill="#1a232f" font-size="11">เปิด PR</text></g>
+          <g><circle cx="535" cy="50" r="26" fill="rgba(236,101,148,.14)" stroke="var(--lane-3)" stroke-width="2"/><text x="535" y="55" text-anchor="middle" fill="#8a1f4a">④</text><text x="535" y="100" text-anchor="middle" fill="#1a232f" font-size="11">รีวิว + CI ผ่าน</text></g>
+          <g><circle cx="690" cy="50" r="26" fill="rgba(34,199,156,.12)" stroke="var(--lane-1)" stroke-width="2"/><text x="690" y="55" text-anchor="middle" fill="#0c3d2e">⑤</text><text x="690" y="100" text-anchor="middle" fill="#1a232f" font-size="11">merge เข้า main</text></g>
+        </g>
+        <g stroke="#586273" stroke-width="2" marker-end="url(#arr2)">
+          <line x1="100" y1="50" x2="195" y2="50"/><line x1="255" y1="50" x2="350" y2="50"/>
+          <line x1="410" y1="50" x2="505" y2="50"/><line x1="565" y1="50" x2="660" y2="50"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="code"><div class="code-top"><span class="lbl">ฝั่ง command line</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="g">git</span> switch -c feature/JIRA-123-add-report
+<span class="c"># ...แก้โค้ด เพิ่มฟีเจอร์...</span>
+<span class="g">git</span> add .
+<span class="g">git</span> commit -m <span class="s">"feat: add monthly sales report export"</span>
+<span class="g">git</span> push -u origin feature/JIRA-123-add-report
+<span class="c"># จากนั้นไปเปิด PR บนหน้าเว็บ GitHub (มีปุ่มขึ้นให้กดอัตโนมัติ)</span></code></pre></div>
+
+    <h3><span class="ic">👀</span>มารยาทใน Code Review (ทำให้ทีมรักคุณ)</h3>
+    <div class="grid g2">
+      <div class="card"><h4><span class="ic" style="background:var(--add-soft);color:var(--add)">👍</span>ควรทำ</h4>
+        <p>• PR เล็กๆ ทำทีละเรื่อง รีวิวง่าย<br>• เขียน title/description ให้ชัดว่าแก้อะไร ทำไม<br>• ตอบคอมเมนต์รีวิวทุกอัน<br>• ตั้งชื่อ branch สื่อความหมาย</p>
+      </div>
+      <div class="card"><h4><span class="ic" style="background:var(--del-soft);color:var(--del)">👎</span>ควรเลี่ยง</h4>
+        <p>• PR ยักษ์ 3,000 บรรทัด ไม่มีใครอยากรีวิว<br>• commit รวมหลายเรื่องใน PR เดียว<br>• title แบบ "fix" / "update" เฉยๆ<br>• merge เองโดยไม่รอรีวิว (ถ้าทีมไม่อนุญาต)</p>
+      </div>
+    </div>
+
+    <h3><span class="ic">🔃</span>อัปเดต branch ให้ตามทันก่อน merge</h3>
+    <p>ระหว่างที่คุณทำฟีเจอร์ คนอื่นอาจ merge เข้า main ไปแล้วหลายอัน ก่อนเปิด/merge PR ควรดึงของใหม่จาก main มารวมในแบรนช์ตัวเองก่อน:</p>
+    <div class="code"><div class="code-top"><span class="lbl">terminal</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="c"># วิธีง่าย (merge main เข้ามา — ปลอดภัย เหมาะกับมือใหม่)</span>
+<span class="g">git</span> switch feature/login
+<span class="g">git</span> merge main
+
+<span class="c"># หรือวิธี rebase (ประวัติสะอาดกว่า แต่ระวังถ้า push ไปแล้ว)</span>
+<span class="g">git</span> pull --rebase origin main</code></pre></div>
+  </section>
+
+  <!-- 07 CONFLICT -->
+  <section class="sec reveal" id="conflict">
+    <div class="sec-head">
+      <span class="sec-tag" style="background:var(--lane-3)">07</span>
+      <div><h2>แก้ Merge Conflict (อย่ากลัว!)</h2>
+      <p class="sub">มันคือเรื่องปกติที่เกิดขึ้นทุกวัน ไม่ใช่ความผิดพลาด แค่ Git ขอให้เราตัดสินใจ</p></div>
+    </div>
+    <p class="lead-p">Conflict เกิดเมื่อ <span class="b">สองคนแก้ไฟล์เดียวกันบรรทัดเดียวกัน</span> Git ตัดสินใจแทนเราไม่ได้ จึงหยุดและใส่ "เครื่องหมาย" ไว้ให้เราเลือกว่าจะเอาเวอร์ชันไหน หน้าตาแบบนี้:</p>
+
+    <div class="code"><div class="code-top"><span class="lbl">ไฟล์ที่เกิด conflict</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="del">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span>
+<span class="del">    var greeting = "สวัสดีครับ";        // โค้ดฝั่งเรา (branch ปัจจุบัน)</span>
+=======
+<span class="add">    var greeting = "Hello!";            // โค้ดที่กำลัง merge เข้ามา</span>
+<span class="add">&gt;&gt;&gt;&gt;&gt;&gt;&gt; main</span></code></pre></div>
+
+    <h4>ขั้นตอนแก้ทีละสเต็ป</h4>
+    <ol>
+      <li>เปิดไฟล์ที่ conflict (Git จะบอกว่าไฟล์ไหนใน <span class="cmd">git status</span>)</li>
+      <li>ลบเครื่องหมาย <span class="cmd">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span> , <span class="cmd">=======</span> , <span class="cmd">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span> ออก</li>
+      <li>เก็บโค้ดที่ถูกต้องไว้ (อาจเอาฝั่งใดฝั่งหนึ่ง หรือผสมทั้งสอง)</li>
+      <li><span class="cmd">git add</span> ไฟล์นั้น แล้ว <span class="cmd">git commit</span> เพื่อจบการ merge</li>
+    </ol>
+
+    <div class="code"><div class="code-top"><span class="lbl">terminal</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="g">git</span> status                 <span class="c"># ดูว่าไฟล์ไหน conflict</span>
+<span class="c"># ...แก้ไฟล์ในเอดิเตอร์ให้เรียบร้อย...</span>
+<span class="g">git</span> add path/to/file.cs
+<span class="g">git</span> commit               <span class="c"># จบการ merge (ข้อความ default ก็พอ)</span>
+
+<span class="c"># ถ้าอยากยกเลิกการ merge ทั้งหมด กลับไปจุดเริ่ม</span>
+<span class="g">git</span> merge --abort
+<span class="g">git</span> rebase --abort       <span class="c"># ถ้ากำลัง rebase อยู่</span></code></pre></div>
+
+    <div class="note tip"><span class="ni">✅</span><p><b>เครื่องมือช่วย:</b> <b>VS Code</b> มี "Merge Editor" ปุ่ม <span class="kbd">Accept Current</span> / <span class="kbd">Accept Incoming</span> / <span class="kbd">Accept Both</span> ให้กดเลือกได้เลย ส่วน <b>GitHub Desktop</b> ก็มีหน้าจอ resolve conflict ที่ชี้ให้เปิดในเอดิเตอร์แล้วกลับมากด Continue — ไม่ต้องนับ <span class="cmd">&lt;&lt;&lt;</span> เองให้ปวดหัว</p></div>
+    <div class="note warn"><span class="ni">⚠️</span><p><b>ลดโอกาสเจอ conflict:</b> commit บ่อยๆ ทีละเล็ก, pull งานทีมเข้ามาบ่อยๆ, และอย่าปล่อย branch ทิ้งไว้นานหลายสัปดาห์ ยิ่ง branch อยู่นาน ยิ่งห่างจาก main มาก conflict ยิ่งเยอะ</p></div>
+  </section>
+
+  <!-- 08 POWER -->
+  <section class="sec reveal" id="power">
+    <div class="sec-head">
+      <span class="sec-tag" style="background:var(--lane-4)">08</span>
+      <div><h2>คำสั่งระดับโปรที่ใช้ในที่ทำงานจริง</h2>
+      <p class="sub">เมื่อ add/commit/push พื้นฐานไม่พอ คำสั่งกลุ่มนี้คือของจริงที่แยกมือใหม่ออกจากมือโปร</p></div>
+    </div>
+
+    <h3><span class="ic">📦</span>git stash — พักงานไว้ก่อน</h3>
+    <p>กำลังแก้ค้างอยู่ แต่ต้องสลับไปทำงานด่วนอื่น? <span class="cmd">stash</span> เก็บงานที่ยังไม่ commit ไว้ในที่ปลอดภัยชั่วคราว ทำให้ working directory สะอาด:</p>
+    <div class="code"><div class="code-top"><span class="lbl">terminal</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="g">git</span> stash                <span class="c"># เก็บงานค้างไว้ (กลับสู่สภาพสะอาด)</span>
+<span class="g">git</span> stash list           <span class="c"># ดูรายการที่เก็บไว้</span>
+<span class="g">git</span> stash pop            <span class="c"># เอางานล่าสุดกลับมา + ลบออกจาก stash</span>
+<span class="g">git</span> stash apply          <span class="c"># เอากลับมาแต่ยังเก็บไว้ใน stash</span></code></pre></div>
+
+    <h3><span class="ic">↩️</span>reset vs revert — สองวิธี "ย้อน" ที่ต่างกันมาก</h3>
+    <div class="tbl"><table>
+      <tr><th>คำสั่ง</th><th>ทำอะไร</th><th>ปลอดภัยกับงานทีมไหม</th></tr>
+      <tr><td><span class="cmd">git revert</span></td><td>สร้าง commit ใหม่ที่ "กลับ" การเปลี่ยนแปลงของ commit เก่า ประวัติยังอยู่ครบ</td><td>✅ ปลอดภัย ใช้กับ branch ที่ push แล้วได้</td></tr>
+      <tr><td><span class="cmd">git reset</span></td><td>"ลบ" commit ออกจากประวัติ ย้อน HEAD กลับไป (เหมือนไม่เคยเกิด)</td><td>⚠️ อันตรายถ้าทำกับ commit ที่ push ไปแล้ว</td></tr>
+    </table></div>
+    <div class="code"><div class="code-top"><span class="lbl">reset 3 ระดับ — จำความต่างให้ดี</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="c"># --soft : ลบ commit แต่เก็บการแก้ไว้ใน staging (พร้อม commit ใหม่)</span>
+<span class="g">git</span> reset --soft HEAD~1
+
+<span class="c"># --mixed (ค่า default): ลบ commit, เอาการแก้ออกจาก staging แต่ไฟล์ยังอยู่</span>
+<span class="g">git</span> reset --mixed HEAD~1
+
+<span class="c"># --hard : ลบ commit + ลบการแก้ทิ้งหมด!! (ระวังที่สุด ใช้เมื่อแน่ใจ)</span>
+<span class="g">git</span> reset --hard HEAD~1
+
+<span class="c"># วิธีปลอดภัยสำหรับงานที่ push แล้ว — ย้อนแบบมีหลักฐาน</span>
+<span class="g">git</span> revert &lt;commit-hash&gt;</code></pre></div>
+
+    <h3><span class="ic">🍒</span>cherry-pick — หยิบเฉพาะ commit ที่ต้องการ</h3>
+    <p>อยากได้แค่ commit เดียวจาก branch อื่น (เช่นเอา hotfix ไปใส่อีก branch) โดยไม่เอาทั้ง branch:</p>
+    <div class="code"><div class="code-top"><span class="lbl">terminal</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="g">git</span> cherry-pick &lt;commit-hash&gt;</code></pre></div>
+
+    <h3><span class="ic">✏️</span>amend — แก้ commit ล่าสุด</h3>
+    <div class="code"><div class="code-top"><span class="lbl">terminal</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="c"># ลืมใส่ไฟล์ / พิมพ์ข้อความผิด — แก้ commit ล่าสุดได้</span>
+<span class="g">git</span> add forgotten-file.cs
+<span class="g">git</span> commit --amend -m <span class="s">"feat: add login (แก้ข้อความใหม่)"</span></code></pre></div>
+    <div class="note danger"><span class="ni">🛑</span><p><b>กฎทอง:</b> อย่าใช้ <span class="cmd">--amend</span>, <span class="cmd">reset --hard</span>, หรือ <span class="cmd">rebase</span> กับ commit ที่ <b>push ขึ้น branch ที่ทีมใช้ร่วมกันไปแล้ว</b> เพราะมันเขียนประวัติใหม่ จะทำให้เพื่อนร่วมทีมพังตามไปด้วย ใช้กับงานที่ยังอยู่ในเครื่องเราเท่านั้น</p></div>
+
+    <h3><span class="ic">🔀</span>rebase — จัดประวัติให้เป็นเส้นตรงสวยงาม</h3>
+    <p>Merge สร้าง "commit รวม" เพิ่มเข้ามา ส่วน rebase ย้ายฐานของ branch ไปต่อท้าย main ทำให้ประวัติเป็นเส้นตรง อ่านง่าย Interactive rebase ยังใช้รวม/แก้/เรียง commit ก่อนเปิด PR ได้:</p>
+    <div class="code"><div class="code-top"><span class="lbl">terminal</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="c"># รวม/แก้ไข 3 commit ล่าสุดให้เรียบร้อยก่อนเปิด PR</span>
+<span class="g">git</span> rebase -i HEAD~3
+<span class="c"># ในหน้าจอที่เปิดมา เปลี่ยน "pick" เป็น:</span>
+<span class="c">#   squash = รวมเข้ากับ commit ด้านบน</span>
+<span class="c">#   reword = แก้ข้อความ commit</span>
+<span class="c">#   drop   = ลบ commit ทิ้ง</span></code></pre></div>
+  </section>
+
+  <!-- 09 OH NO -->
+  <section class="sec reveal" id="ohno">
+    <div class="sec-head">
+      <span class="sec-tag" style="background:var(--del)">09</span>
+      <div><h2>"แย่แล้ว!" — คู่มือกู้คืนตอนพลาด</h2>
+      <p class="sub">ข่าวดี: Git แทบจะกู้คืนทุกอย่างได้ ถ้าเคย commit ไว้ ของไม่หายง่ายๆ</p></div>
+    </div>
+
+    <div class="tabs" id="ohno-tabs">
+      <div class="tabbar">
+        <button class="tabbtn active" data-t="oh1">commit ผิด branch</button>
+        <button class="tabbtn" data-t="oh2">อยากแก้/ลบ commit ล่าสุด</button>
+        <button class="tabbtn" data-t="oh3">ลบโค้ดที่ยังไม่เซฟ</button>
+        <button class="tabbtn" data-t="oh4">ลบ branch ไปแล้ว!</button>
+        <button class="tabbtn" data-t="oh5">push ผิดขึ้นไปแล้ว</button>
+      </div>
+
+      <div class="tabpanel active" data-p="oh1"><div class="scenario">
+        <p class="q">เผลอ commit ลง main แทนที่จะเป็น feature branch</p>
+        <div class="code"><div class="code-top"><span class="lbl">terminal</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="c"># ยังอยู่บน main, ยังไม่ push</span>
+<span class="g">git</span> switch -c feature/correct-branch   <span class="c"># สร้าง branch ใหม่จากจุดนี้ (พา commit ไปด้วย)</span>
+<span class="g">git</span> switch main
+<span class="g">git</span> reset --hard HEAD~1               <span class="c"># เอา commit ออกจาก main</span></code></pre></div>
+      </div></div>
+
+      <div class="tabpanel" data-p="oh2"><div class="scenario">
+        <p class="q">commit ล่าสุดข้อความผิด หรืออยากเอา commit ออกแต่เก็บโค้ดไว้</p>
+        <div class="code"><div class="code-top"><span class="lbl">terminal</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="c"># แค่แก้ข้อความ commit ล่าสุด</span>
+<span class="g">git</span> commit --amend -m <span class="s">"ข้อความที่ถูกต้อง"</span>
+
+<span class="c"># เอา commit ออก แต่เก็บการแก้ไฟล์ไว้ (กลับมาแก้ต่อ/commit ใหม่)</span>
+<span class="g">git</span> reset --soft HEAD~1</code></pre></div>
+      </div></div>
+
+      <div class="tabpanel" data-p="oh3"><div class="scenario">
+        <p class="q">แก้ไฟล์มั่วไปหมด อยากย้อนกลับเป็นเวอร์ชันที่ commit ไว้ล่าสุด</p>
+        <div class="code"><div class="code-top"><span class="lbl">terminal</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="c"># คืนไฟล์เดียว</span>
+<span class="g">git</span> restore path/to/file.cs
+
+<span class="c"># คืนทุกไฟล์ที่ยังไม่ commit (ระวัง: การแก้จะหายหมด)</span>
+<span class="g">git</span> restore .</code></pre></div>
+        <div class="note warn" style="margin-top:14px"><span class="ni">⚠️</span><p>คำสั่งนี้ลบการแก้ที่ <b>ยังไม่ commit</b> ทิ้งถาวร เช็กให้ดีก่อนรัน — ของที่ยังไม่ commit กู้ยากกว่าของที่ commit แล้วมาก</p></div>
+      </div></div>
+
+      <div class="tabpanel" data-p="oh4"><div class="scenario">
+        <p class="q">เผลอลบ branch ที่มีงานสำคัญไป! ยังกู้ได้ไหม?</p>
+        <div class="code"><div class="code-top"><span class="lbl">terminal — reflog คือพระเอก</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="c"># reflog เก็บประวัติทุกการเคลื่อนไหวของ HEAD ไว้ (แม้ commit ที่ "หาย")</span>
+<span class="g">git</span> reflog
+<span class="c"># หา hash ของ commit สุดท้ายบน branch ที่ลบ แล้วสร้าง branch กลับมา</span>
+<span class="g">git</span> branch recovered-branch &lt;commit-hash&gt;</code></pre></div>
+        <div class="note tip" style="margin-top:14px"><span class="ni">✅</span><p><span class="cmd">git reflog</span> คืออาวุธลับ มันจดทุกอย่างที่ HEAD เคยชี้ไป commit ที่คิดว่าหายไปแล้วมักจะยังอยู่ที่นี่หลายวัน</p></div>
+      </div></div>
+
+      <div class="tabpanel" data-p="oh5"><div class="scenario">
+        <p class="q">push commit ผิดขึ้น remote ไปแล้ว (แต่เป็น branch ของเราเอง)</p>
+        <div class="code"><div class="code-top"><span class="lbl">terminal</span><button class="copy">คัดลอก</button></div>
+<pre><code><span class="c"># วิธีปลอดภัยที่สุด: revert (สร้าง commit ย้อน ไม่เขียนประวัติใหม่)</span>
+<span class="g">git</span> revert &lt;commit-hash&gt;
+<span class="g">git</span> push
+
+<span class="c"># ถ้าจำเป็นต้องเขียนประวัติใหม่บน branch ส่วนตัว ใช้ --force-with-lease</span>
+<span class="c"># (ปลอดภัยกว่า --force เพราะเช็กก่อนว่าไม่ทับงานคนอื่น)</span>
+<span class="g">git</span> push --force-with-lease</code></pre></div>
+        <div class="note danger" style="margin-top:14px"><span class="ni">🛑</span><p>อย่า force push ขึ้น <b>branch ส่วนกลาง</b> (main/develop) เด็ดขาด เว้นแต่ได้ตกลงกับทีมแล้ว มันลบงานคนอื่นได้</p></div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- 10 CONVENTION -->
+  <section class="sec reveal" id="convention">
+    <div class="sec-head">
+      <span class="sec-tag" style="background:var(--lane-1)">10</span>
+      <div><h2>มาตรฐาน commit &amp; branch ที่ทีมมืออาชีพใช้</h2>
+      <p class="sub">เขียน commit ให้ดูเป็นมือโปรตั้งแต่ commit แรก — สร้างความประทับใจได้จริง</p></div>
+    </div>
+
+    <h3><span class="ic">📝</span>Conventional Commits — รูปแบบข้อความมาตรฐาน</h3>
+    <p>รูปแบบ <span class="cmd">type: คำอธิบายสั้นๆ</span> เป็นที่นิยมทั่วโลก ช่วยให้อ่านประวัติง่ายและทำ changelog/version อัตโนมัติได้:</p>
+    <div class="tbl"><table>
+      <tr><th>Type</th><th>ใช้เมื่อ</th><th>ตัวอย่าง</th></tr>
+      <tr><td><span class="cmd">feat</span></td><td>ฟีเจอร์ใหม่</td><td><span class="mono">feat: add export to Excel</span></td></tr>
+      <tr><td><span class="cmd">fix</span></td><td>แก้บั๊ก</td><td><span class="mono">fix: correct date format on invoice</span></td></tr>
+      <tr><td><span class="cmd">refactor</span></td><td>ปรับโค้ดโดยไม่เปลี่ยนพฤติกรรม</td><td><span class="mono">refactor: extract pricing service</span></td></tr>
+      <tr><td><span class="cmd">docs</span></td><td>เอกสาร/คอมเมนต์</td><td><span class="mono">docs: update README setup steps</span></td></tr>
+      <tr><td><span class="cmd">chore</span></td><td>งานจิปาถะ (อัปเดต lib, config)</td><td><span class="mono">chore: bump dependencies</span></td></tr>
+      <tr><td><span class="cmd">test</span></td><td>เพิ่ม/แก้เทสต์</td><td><span class="mono">test: add unit tests for cart</span></td></tr>
+      <tr><td><span class="cmd">style</span></td><td>จัดรูปแบบ (เว้นวรรค, format)</td><td><span class="mono">style: format with dotnet format</span></td></tr>
+      <tr><td><span class="cmd">perf</span></td><td>ปรับ performance</td><td><span class="mono">perf: cache product lookups</span></td></tr>
+    </table></div>
+    <div class="note tip"><span class="ni">✅</span><p><b>เคล็ดลับเขียน commit ดี:</b> เขียนเป็นประโยคคำสั่ง (imperative) ภาษาอังกฤษ เช่น "add", "fix", "remove" ไม่ใช่ "added"/"fixed" — ลองอ่านว่า "ถ้า apply commit นี้ มันจะ ___" ให้ลงท้ายประโยคได้พอดี</p></div>
+
+    <h3><span class="ic">🌿</span>การตั้งชื่อ branch</h3>
+    <div class="code"><div class="code-top"><span class="lbl">รูปแบบที่นิยม</span><button class="copy">คัดลอก</button></div>
+<pre><code>feature/add-user-profile        <span class="c"># ฟีเจอร์ใหม่</span>
+bugfix/login-error              <span class="c"># แก้บั๊ก</span>
+hotfix/payment-crash            <span class="c"># แก้ด่วนบน production</span>
+feature/JIRA-123-export-report  <span class="c"># ผูกกับเลข ticket (พบบ่อยในองค์กร)</span></code></pre></div>
+
+    <h3><span class="ic">🗺️</span>กลยุทธ์การ branch ของทีม</h3>
+    <div class="grid g2">
+      <div class="card">
+        <h4><span class="ic" style="background:rgba(34,199,156,.12);color:var(--lane-1)">🌊</span>GitHub Flow (นิยมที่สุดตอนนี้)</h4>
+        <p>เรียบง่าย: มี <span class="b">main</span> เป็นตัวจริง ทุกงานแตก feature branch สั้นๆ → เปิด PR → merge → deploy เหมาะกับทีมที่ deploy บ่อย (CI/CD) มือใหม่เริ่มจากตรงนี้ได้เลย</p>
+      </div>
+      <div class="card">
+        <h4><span class="ic" style="background:rgba(143,124,247,.14);color:var(--lane-4)">🏗️</span>Git Flow (แบบดั้งเดิม)</h4>
+        <p>ซับซ้อนกว่า: มีทั้ง <span class="b">main</span>, <span class="b">develop</span>, <span class="b">feature</span>, <span class="b">release</span>, <span class="b">hotfix</span> เหมาะกับซอฟต์แวร์ที่ปล่อยเป็นรอบเวอร์ชัน (เช่น เดสก์ท็อปแอป) แต่หนักไปสำหรับเว็บที่ deploy ทุกวัน</p>
+      </div>
+    </div>
+    <div class="note info"><span class="ni">💡</span><p>แต่ละบริษัทมีกติกาของตัวเอง <b>วันแรกที่เข้างานให้ถามทีมว่าใช้ flow ไหน</b> และ branch หลักชื่ออะไร (main/master/develop) อย่าเดาเอง เพราะกฎ branch ผิดอาจกระทบทั้งทีม</p></div>
+  </section>
+
+  <!-- 11 DESKTOP -->
+  <section class="sec reveal" id="desktop">
+    <div class="sec-head">
+      <span class="sec-tag" style="background:var(--lane-2)">11</span>
+      <div><h2>GitHub Desktop ฉบับใช้งานจริง</h2>
+      <p class="sub">ทุกปุ่มในแอป = คำสั่ง Git ตัวไหน — เข้าใจแล้วใช้ได้ทันที</p></div>
+    </div>
+    <p class="lead-p">GitHub Desktop เหมาะมากสำหรับงานประจำวัน (commit, push, pull, สลับ branch, ดู diff) เพราะเห็นภาพชัดและพิมพ์ผิดยาก ส่วนงานซับซ้อน (interactive rebase, cherry-pick หลายตัว) ยังต้องพึ่ง command line อยู่บ้าง — หลายคนใช้ทั้งคู่</p>
+
+    <div class="tbl"><table>
+      <tr><th>ในแอป GitHub Desktop</th><th>เทียบเท่าคำสั่ง Git</th></tr>
+      <tr><td>File → Clone repository</td><td><span class="cmd">git clone</span></td></tr>
+      <tr><td>ช่อง "Changes" + ติ๊กถูกหน้าไฟล์</td><td>คือ Working Directory + <span class="cmd">git add</span> (ติ๊ก = staging)</td></tr>
+      <tr><td>ช่อง Summary + ปุ่ม "Commit to main"</td><td><span class="cmd">git commit -m "..."</span></td></tr>
+      <tr><td>ปุ่ม "Push origin"</td><td><span class="cmd">git push</span></td></tr>
+      <tr><td>ปุ่ม "Fetch/Pull origin"</td><td><span class="cmd">git fetch</span> / <span class="cmd">git pull</span></td></tr>
+      <tr><td>Current Branch ▾ → New Branch</td><td><span class="cmd">git switch -c</span></td></tr>
+      <tr><td>ปุ่ม "Create Pull Request"</td><td>เปิดหน้าเว็บ GitHub เพื่อสร้าง PR</td></tr>
+      <tr><td>แท็บ "History"</td><td><span class="cmd">git log</span> (ดู diff ของแต่ละ commit ได้)</td></tr>
+      <tr><td>Branch menu → Stash changes</td><td><span class="cmd">git stash</span></td></tr>
+      <tr><td>หน้าจอ resolve conflict</td><td>ช่วยจัดการ merge conflict แบบมี UI</td></tr>
+    </table></div>
+
+    <h3><span class="ic">🔄</span>workflow ทั่วไปใน GitHub Desktop (ทีละขั้น)</h3>
+    <ol>
+      <li><b>Clone</b> โปรเจกต์จาก GitHub (File → Clone repository)</li>
+      <li>กด <b>Current Branch</b> → <b>New Branch</b> ตั้งชื่อ feature ของคุณ</li>
+      <li>แก้โค้ดในเอดิเตอร์ปกติ — ไฟล์ที่เปลี่ยนจะโผล่ในแท็บ <b>Changes</b> อัตโนมัติ</li>
+      <li>ติ๊กไฟล์ที่จะ commit, เขียน <b>Summary</b> สั้นๆ, กด <b>Commit to [branch]</b></li>
+      <li>กด <b>Publish branch</b> / <b>Push origin</b> เพื่อส่งขึ้น GitHub</li>
+      <li>กด <b>Create Pull Request</b> → ระบบเปิดหน้าเว็บให้กรอกรายละเอียด PR</li>
+    </ol>
+
+    <div class="note tip"><span class="ni">✅</span><p><b>ข้อดีที่สุดของ GitHub Desktop:</b> มันแสดง <b>diff สีเขียว/แดง</b> ให้เห็นชัดทุกบรรทัดก่อน commit ทำให้ตรวจทานง่ายและไม่เผลอ commit ไฟล์ที่ไม่ตั้งใจ — เป็นนิสัยที่ดีมากสำหรับมือใหม่</p></div>
+    <div class="note warn"><span class="ni">⚠️</span><p>UI และตำแหน่งเมนูของ GitHub Desktop รวมถึงหน้าเว็บ GitHub <b>อาจเปลี่ยนตามเวอร์ชัน</b> ขั้นตอนข้างบนเป็นภาพรวม flow ที่เสถียร แต่ชื่อปุ่ม/ตำแหน่งอาจต่างเล็กน้อย เช็กคู่มือทางการล่าสุดได้ที่ <span class="cmd">docs.github.com/desktop</span></p></div>
+  </section>
+
+  <!-- 12 INTERVIEW -->
+  <section class="sec reveal" id="interview">
+    <div class="sec-head">
+      <span class="sec-tag" style="background:var(--lane-4)">12</span>
+      <div><h2>เตรียมตัวสัมภาษณ์ &amp; วันแรกของงาน</h2>
+      <p class="sub">สิ่งที่บริษัทคาดหวัง + คำถามที่เจอบ่อย + กับดักที่ห้ามตกหลุม</p></div>
+    </div>
+
+    <h3><span class="ic">🎤</span>คำถามสัมภาษณ์ที่เจอบ่อย (ตอบให้ได้)</h3>
+    <div class="grid g2">
+      <div class="card"><h4>Q: Git กับ GitHub ต่างกันยังไง?</h4><p>Git = เครื่องมือ version control ในเครื่อง, GitHub = บริการเก็บ repo บนคลาวด์ + ระบบทำงานร่วมกัน (PR, review, CI)</p></div>
+      <div class="card"><h4>Q: merge กับ rebase ต่างกันยังไง?</h4><p>merge รวม branch โดยสร้าง merge commit (ประวัติแตกกิ่ง), rebase ย้ายฐาน branch ไปต่อท้าย ทำให้ประวัติเป็นเส้นตรง แต่เขียนประวัติใหม่</p></div>
+      <div class="card"><h4>Q: reset กับ revert ต่างกันยังไง?</h4><p>revert สร้าง commit ใหม่เพื่อย้อน (ปลอดภัยกับงานที่ push แล้ว), reset ลบ commit ออกจากประวัติ (อันตรายกับ branch ส่วนกลาง)</p></div>
+      <div class="card"><h4>Q: Staging Area คืออะไร?</h4><p>พื้นที่กลางระหว่างไฟล์ที่แก้กับ commit ใช้เลือกว่าจะเอาไฟล์ไหนเข้า commit รอบนี้ จัดการด้วย <span class="cmd">git add</span></p></div>
+      <div class="card"><h4>Q: จะแก้ merge conflict ยังไง?</h4><p>เปิดไฟล์ที่ conflict, เลือกโค้ดที่ถูก, ลบเครื่องหมาย <span class="cmd">&lt;&lt;&lt;/===/&gt;&gt;&gt;</span>, แล้ว add + commit</p></div>
+      <div class="card"><h4>Q: HEAD คืออะไร?</h4><p>ตัวชี้ (pointer) ที่บอกว่าตอนนี้เราอยู่ที่ commit/branch ไหน — เหมือน "ตำแหน่งปัจจุบัน" ในประวัติ</p></div>
+    </div>
+
+    <h3><span class="ic">🚩</span>กับดักที่ทำให้ดู "มือใหม่" (เลี่ยงให้หมด)</h3>
+    <ul>
+      <li>commit <span class="cmd">bin/</span>, <span class="cmd">obj/</span>, <span class="cmd">node_modules/</span> หรือไฟล์ build ขึ้น repo (ลืมตั้ง .gitignore)</li>
+      <li>commit <span class="b">รหัสผ่าน/secret/connection string</span> จริง — ผิดร้ายแรงด้านความปลอดภัย</li>
+      <li>ข้อความ commit แบบ <span class="cmd">"fix"</span>, <span class="cmd">"update"</span>, <span class="cmd">"asdf"</span> — สื่อความหมายไม่ได้</li>
+      <li><span class="cmd">git push --force</span> ขึ้น branch ส่วนกลางจนลบงานเพื่อน</li>
+      <li>commit ก้อนใหญ่รวมหลายเรื่องในครั้งเดียว — รีวิวยาก ย้อนยาก</li>
+      <li>ทำงานบน <span class="cmd">main</span> ตรงๆ โดยไม่แตก branch</li>
+    </ul>
+
+    <h3><span class="ic">📋</span>เช็กลิสต์ก่อนเริ่มงานวันแรก</h3>
+    <div class="grid g2">
+      <div class="card"><h4><span class="ic" style="background:var(--add-soft);color:var(--add)">✓</span>เตรียมตัว/เครื่องมือ</h4>
+        <p>☐ ติดตั้ง Git + ตั้งชื่อ/อีเมล<br>☐ ติดตั้ง GitHub Desktop หรือ Git GUI ที่ถนัด<br>☐ ตั้ง SSH key / sign in GitHub<br>☐ ลองสร้าง repo ทดสอบ ฝึก add/commit/push/PR ครบวง</p>
+      </div>
+      <div class="card"><h4><span class="ic" style="background:rgba(143,124,247,.14);color:var(--lane-4)">?</span>คำถามควรถามทีม</h4>
+        <p>☐ ใช้ branching flow แบบไหน? branch หลักชื่ออะไร?<br>☐ มาตรฐานข้อความ commit เป็นยังไง?<br>☐ PR ต้องมีคนรีวิวกี่คนถึง merge ได้?<br>☐ ใช้ GitHub / GitLab / Azure DevOps?</p>
+      </div>
+    </div>
+    <div class="note tip"><span class="ni">✅</span><p><b>เคล็ดลับสร้างความประทับใจ:</b> ไม่มีใครคาดหวังให้คุณรู้ flow ของบริษัทตั้งแต่วันแรก สิ่งที่ทำให้ดูโปรคือ <b>กล้าถามให้ชัดก่อนลงมือ</b> + ทำ PR เล็กๆ สะอาดๆ + เขียน commit ที่อ่านรู้เรื่อง การถามดีกว่าการเดาแล้วทำพังทั้งทีม</p></div>
+  </section>
+
+  <!-- 13 CHEAT -->
+  <section class="sec reveal" id="cheat">
+    <div class="sec-head">
+      <span class="sec-tag" style="background:var(--lane-3)">13</span>
+      <div><h2>Cheat Sheet — สรุปคำสั่งไว้เปิดเร็ว</h2>
+      <p class="sub">บุ๊กมาร์กหน้านี้ไว้ เปิดดูตอนทำงานจริงได้เลย</p></div>
+    </div>
+
+    <div class="cheat">
+      <div class="ch">
+        <h4><span class="chip-c" style="background:var(--lane-4)"></span>ตั้งค่า &amp; เริ่มต้น</h4>
+        <div class="row"><span class="k">git config --global user.name</span></div>
+        <div class="row"><span class="k">git clone &lt;url&gt;</span><span class="v">ดึงโปรเจกต์</span></div>
+        <div class="row"><span class="k">git init</span><span class="v">เริ่มใหม่</span></div>
+        <div class="row"><span class="k">git remote -v</span><span class="v">ดู remote</span></div>
+      </div>
+      <div class="ch">
+        <h4><span class="chip-c" style="background:var(--lane-1)"></span>วงจรประจำวัน</h4>
+        <div class="row"><span class="k">git status</span><span class="v">ดูสถานะ</span></div>
+        <div class="row"><span class="k">git add .</span><span class="v">เข้า staging</span></div>
+        <div class="row"><span class="k">git commit -m</span><span class="v">บันทึก</span></div>
+        <div class="row"><span class="k">git push</span><span class="v">ส่งขึ้น</span></div>
+        <div class="row"><span class="k">git pull</span><span class="v">ดึงลง</span></div>
+      </div>
+      <div class="ch">
+        <h4><span class="chip-c" style="background:var(--lane-2)"></span>Branch</h4>
+        <div class="row"><span class="k">git branch</span><span class="v">ดูทั้งหมด</span></div>
+        <div class="row"><span class="k">git switch -c &lt;name&gt;</span><span class="v">สร้าง+ย้าย</span></div>
+        <div class="row"><span class="k">git switch main</span><span class="v">สลับ</span></div>
+        <div class="row"><span class="k">git merge &lt;name&gt;</span><span class="v">รวม</span></div>
+        <div class="row"><span class="k">git branch -d &lt;name&gt;</span><span class="v">ลบ</span></div>
+      </div>
+      <div class="ch">
+        <h4><span class="chip-c" style="background:var(--lane-3)"></span>ดูประวัติ</h4>
+        <div class="row"><span class="k">git log --oneline</span><span class="v">สรุปสั้น</span></div>
+        <div class="row"><span class="k">git log --graph --all</span><span class="v">กราฟ</span></div>
+        <div class="row"><span class="k">git diff</span><span class="v">ดูที่แก้</span></div>
+        <div class="row"><span class="k">git show &lt;hash&gt;</span><span class="v">ดู commit</span></div>
+      </div>
+      <div class="ch">
+        <h4><span class="chip-c" style="background:var(--lane-4)"></span>พักงาน &amp; แก้ไข</h4>
+        <div class="row"><span class="k">git stash</span><span class="v">พักงาน</span></div>
+        <div class="row"><span class="k">git stash pop</span><span class="v">เอากลับ</span></div>
+        <div class="row"><span class="k">git commit --amend</span><span class="v">แก้ล่าสุด</span></div>
+        <div class="row"><span class="k">git restore &lt;file&gt;</span><span class="v">คืนไฟล์</span></div>
+      </div>
+      <div class="ch">
+        <h4><span class="chip-c" style="background:var(--del)"></span>ย้อน &amp; กู้คืน</h4>
+        <div class="row"><span class="k">git reset --soft HEAD~1</span><span class="v">ถอน commit</span></div>
+        <div class="row"><span class="k">git revert &lt;hash&gt;</span><span class="v">ย้อนปลอดภัย</span></div>
+        <div class="row"><span class="k">git reflog</span><span class="v">กู้ที่หาย</span></div>
+        <div class="row"><span class="k">git merge --abort</span><span class="v">ยกเลิก merge</span></div>
+      </div>
+    </div>
+
+    <div class="note info" style="margin-top:24px"><span class="ni">💡</span><p><b>จำ 8 คำสั่งนี้พอใช้งานได้ 90%:</b> <span class="cmd">status</span> · <span class="cmd">add</span> · <span class="cmd">commit</span> · <span class="cmd">push</span> · <span class="cmd">pull</span> · <span class="cmd">switch</span> · <span class="cmd">merge</span> · <span class="cmd">log</span> — ที่เหลือค่อยเรียนรู้เมื่อเจอสถานการณ์จริง</p></div>
+  </section>
+
+  </main>
+</div>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="foot-inner">
+    <h3>📚 แหล่งเรียนรู้ต่อ (ทางการ &amp; เชื่อถือได้)</h3>
+    <div class="foot-links">
+      <a href="https://git-scm.com/doc" target="_blank" rel="noopener"><div class="t">Pro Git Book (ฟรี)</div><div class="d">git-scm.com/book — ตำราอ้างอิงทางการ</div></a>
+      <a href="https://docs.github.com" target="_blank" rel="noopener"><div class="t">GitHub Docs</div><div class="d">docs.github.com — เอกสารทางการ GitHub</div></a>
+      <a href="https://docs.github.com/desktop" target="_blank" rel="noopener"><div class="t">GitHub Desktop Docs</div><div class="d">docs.github.com/desktop</div></a>
+      <a href="https://learngitbranching.js.org" target="_blank" rel="noopener"><div class="t">Learn Git Branching</div><div class="d">เกมฝึก branch แบบ interactive</div></a>
+      <a href="https://skills.github.com" target="_blank" rel="noopener"><div class="t">GitHub Skills</div><div class="d">คอร์สลงมือทำจริงบน GitHub</div></a>
+      <a href="https://dangitgit.com" target="_blank" rel="noopener"><div class="t">Dangit, Git!?!</div><div class="d">รวมวิธีแก้ตอนพลาด เปิดดูเร็ว</div></a>
+    </div>
+    <p class="foot-fine">
+      <b>หมายเหตุเรื่องความถูกต้อง:</b> เนื้อหาคำสั่ง Git และแนวคิดหลักในคู่มือนี้เป็นความรู้มาตรฐานที่เสถียรและตรวจทานตามพฤติกรรมของ Git ที่ใช้กันทั่วไป (ตรวจสอบเทียบกับเอกสารทางการ git-scm.com ได้) ส่วนที่เกี่ยวกับ <b>หน้าตา UI/ตำแหน่งปุ่มของ GitHub Desktop และหน้าเว็บ GitHub</b> อาจเปลี่ยนแปลงตามเวอร์ชัน จึงควรยึดคู่มือทางการล่าสุดเป็นหลัก · กฎ branching/commit แต่ละบริษัทอาจต่างกัน ให้ยึดมาตรฐานของทีมที่คุณเข้าทำงานเป็นสำคัญ<br><br>
+      สร้างเป็นคู่มือเตรียมความพร้อมก่อนเริ่มงานใหม่ · ใช้ command line หรือ GitHub Desktop ก็ได้ ทั้งคู่เรียก Git ตัวเดียวกัน 🌿
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  /* ---- copy buttons ---- */
+  document.querySelectorAll('.copy').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var code = btn.closest('.code').querySelector('code');
+      var text = code ? code.innerText : '';
+      navigator.clipboard.writeText(text).then(function(){
+        var old = btn.textContent;
+        btn.textContent = '✓ คัดลอกแล้ว';
+        btn.classList.add('ok');
+        setTimeout(function(){ btn.textContent = old; btn.classList.remove('ok'); }, 1600);
+      }).catch(function(){
+        btn.textContent = 'คัดลอกไม่ได้';
+        setTimeout(function(){ btn.textContent = 'คัดลอก'; }, 1600);
+      });
+    });
+  });
+
+  /* ---- scenario tabs ---- */
+  var tabRoot = document.getElementById('ohno-tabs');
+  if(tabRoot){
+    tabRoot.querySelectorAll('.tabbtn').forEach(function(b){
+      b.addEventListener('click', function(){
+        var t = b.getAttribute('data-t');
+        tabRoot.querySelectorAll('.tabbtn').forEach(function(x){x.classList.toggle('active', x===b);});
+        tabRoot.querySelectorAll('.tabpanel').forEach(function(p){
+          p.classList.toggle('active', p.getAttribute('data-p')===t);
+        });
+      });
+    });
+  }
+
+  /* ---- reveal on scroll ---- */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, {threshold:.12, rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  /* ---- active nav node on scroll ---- */
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.rail a'));
+  var sections = navLinks.map(function(a){ return document.querySelector(a.getAttribute('href')); }).filter(Boolean);
+  var spy = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        var id = '#' + e.target.id;
+        navLinks.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href')===id); });
+      }
+    });
+  }, {threshold:.18, rootMargin:'-10% 0px -55% 0px'});
+  sections.forEach(function(s){ spy.observe(s); });
+
+  /* ---- progress bar ---- */
+  var bar = document.getElementById('progress');
+  function onScroll(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max>0 ? (h.scrollTop / max) * 100 : 0;
+    bar.style.width = p + '%';
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+</script>
+</body>
+</html>
